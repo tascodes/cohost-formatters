@@ -260,29 +260,19 @@ function Exif() {
           <div className="my-4 text-lg">Preview</div>
           <div className="mb-16">
             <div className="relative flex w-fit rounded-lg bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-6 font-atkinson shadow-md">
-              <div className="absolute left-6 my-auto">
-                <Image
-                  width={32}
-                  height={32}
-                  src="/logos/Fujifilm_X_Series.png"
-                  alt="Fujifilm X Series logo"
-                />
-              </div>
-              <div className="ml-8 flex w-fit">
-                {prettyExif(exifData).map(({ label, id }) => {
-                  return (
-                    <div
-                      className={clsx(
-                        "px-3",
-                        id === "MakeAndModel" && "font-bold"
-                      )}
-                      key={id}
-                    >
-                      {label}
-                    </div>
-                  );
-                })}
-              </div>
+              {prettyExif(exifData).map(({ label, id }) => {
+                return (
+                  <div
+                    className={clsx(
+                      "px-3",
+                      id === "MakeAndModel" && "font-bold"
+                    )}
+                    key={id}
+                  >
+                    {label}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="my-4 text-lg">Code</div>
