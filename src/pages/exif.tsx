@@ -121,6 +121,10 @@ function Exif() {
   const [exifData, setExifData] = useState<ExifData>();
   const [isMissingData, setIsMissingData] = useState(false);
 
+  const [leftColor, setLeftColor] = useState("#f8fafc");
+  const [rightColor, setRightColor] = useState("#f1f5f9");
+  const [textColor, setTextColor] = useState("#000000");
+
   const handleCheckedChange = (index: number) => {
     const updatedCheckedItems = [...checkedItems];
     updatedCheckedItems[index] = !updatedCheckedItems[index];
@@ -165,7 +169,7 @@ function Exif() {
 
   const transformHtml = (formatted: ReturnType<typeof prettyExif>) => {
     return `
-      <div style="display: flex;position: relative;padding-left: 1rem;padding-right: 1rem;padding-top: 2rem;padding-bottom: 2rem;color: #000000;border-radius: 0.5rem;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);background: rgb(248,250,252);background: linear-gradient(135deg, rgba(248,250,252,1) 0%, rgba(241,245,249,1) 100%);width:fit-content;">
+      <div style="display: flex;position: relative;padding-left: 1rem;padding-right: 1rem;padding-top: 2rem;padding-bottom: 2rem;border-radius: 0.5rem;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);width: fit-content;background:linear-gradient(135deg, ${leftColor}, ${rightColor});color: ${textColor}">
         ${formatted
           .map(({ label, id }) => {
             return `<div style="padding-left: 0.5rem;padding-right: 0.5rem;${
@@ -177,8 +181,8 @@ function Exif() {
   };
 
   return (
-    <div className="container mx-auto mb-16 max-w-2xl text-slate-900 dark:text-slate-100 sm:px-6 lg:px-8">
-      <div className="my-4 text-xl font-bold">Step 1: Upload an Image</div>
+    <div className="container mx-auto mb-16 max-w-2xl text-slate-700 dark:text-slate-100 sm:px-6 lg:px-8">
+      <h2 className="my-4 text-xl font-bold">Step 1: Upload an Image</h2>
       <div className="w-full grow" {...getRootProps()}>
         <div>
           <div
@@ -223,11 +227,11 @@ function Exif() {
         </div>
         <p className="text-xs text-gray-500">PNG, JPG, GIF, HEIF</p>
       </div>
-      <div className="mb-4 mt-8 text-xl font-bold">
+      <h2 className="mb-4 mt-8 text-xl font-bold">
         Step 2: Choose Data to Include
-      </div>
+      </h2>
       <fieldset>
-        <div className="border-skate-200 divide-y divide-slate-200 border-t border-b">
+        <div className="divide-y divide-slate-200 border-t border-b border-slate-200 dark:divide-slate-600 dark:border-slate-600">
           {exifItems.map((item, itemIdx) => (
             <div key={itemIdx} className="relative flex items-start py-4">
               <div className="min-w-0 flex-1 text-sm">
@@ -252,28 +256,102 @@ function Exif() {
           ))}
         </div>
       </fieldset>
-      <div className="mb-4 mt-8 text-xl font-bold">Step 3: Copy HTML</div>
+      <h2 className="mb-4 mt-8 text-xl font-bold">Step 3: Customize</h2>
+      {exifData && (
+        <>
+          <h3 className="my-4 text-lg font-bold">Preview</h3>
+
+          <div
+            className="relative flex w-fit rounded-lg py-8 px-4 font-atkinson text-black shadow-md"
+            style={{
+              color: textColor,
+              background: `linear-gradient(135deg, ${leftColor}, ${rightColor})`,
+            }}
+          >
+            {prettyExif(exifData).map(({ label, id }) => {
+              return (
+                <div
+                  className={clsx("px-2", id === "MakeAndModel" && "font-bold")}
+                  key={id}
+                >
+                  {label}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+      <div className="mt-8 flex w-72 flex-col gap-3">
+        <div>
+          <label
+            className="block flex items-center justify-between text-sm font-medium text-slate-700"
+            htmlFor="left-color"
+          >
+            Left Color
+            <div
+              style={{ backgroundColor: leftColor }}
+              className="ml-2 h-12 w-12 rounded-full border border-slate-100 shadow dark:border-slate-500"
+            ></div>
+          </label>
+          <input
+            id="left-color"
+            className="sr-only"
+            type="color"
+            value={leftColor}
+            onChange={(e) => {
+              setLeftColor(e.target.value);
+            }}
+          />
+        </div>
+
+        <div>
+          <label
+            className="block flex items-center justify-between text-sm font-medium text-slate-700"
+            htmlFor="right-color"
+          >
+            Right Color
+            <div
+              style={{ backgroundColor: rightColor }}
+              className="ml-2 h-12 w-12 rounded-full border border-slate-200 shadow dark:border-slate-500"
+            ></div>
+          </label>
+          <input
+            id="right-color"
+            className="sr-only"
+            type="color"
+            value={rightColor}
+            onChange={(e) => {
+              setRightColor(e.target.value);
+            }}
+          />
+        </div>
+
+        <div>
+          <label
+            className="block flex items-center justify-between text-sm font-medium text-slate-700"
+            htmlFor="text-color"
+          >
+            Text Color
+            <div
+              style={{ backgroundColor: textColor }}
+              className="ml-2 h-12 w-12 rounded-full border border-slate-100 shadow dark:border-slate-500"
+            ></div>
+          </label>
+          <input
+            id="text-color"
+            className="sr-only"
+            type="color"
+            value={textColor}
+            onChange={(e) => {
+              setTextColor(e.target.value);
+            }}
+          />
+        </div>
+      </div>
+
       {!!exifData && (
         <>
-          <div className="my-4 text-lg font-bold">Preview</div>
-          <div className="mb-16">
-            <div className="relative flex w-fit rounded-lg bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 font-atkinson text-black shadow-md">
-              {prettyExif(exifData).map(({ label, id }) => {
-                return (
-                  <div
-                    className={clsx(
-                      "px-2",
-                      id === "MakeAndModel" && "font-bold"
-                    )}
-                    key={id}
-                  >
-                    {label}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="my-4 text-lg font-bold">Code</div>
+          <h2 className="mb-4 mt-8 text-xl font-bold">Step 4: Copy HTML</h2>
           <div className="rounded-lg border border-slate-100 bg-white p-4 shadow dark:border-slate-700 dark:bg-slate-800">
             <code>{transformHtml(prettyExif(exifData))}</code>
           </div>
