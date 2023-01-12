@@ -2,7 +2,6 @@ import EXIF from "exif-js";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import clsx from "clsx";
-import Image from "next/image";
 
 type ExifData = {
   Make?: string;
@@ -166,32 +165,31 @@ function Exif() {
 
   const transformHtml = (formatted: ReturnType<typeof prettyExif>) => {
     return `
-      <div style="display: flex;width: fit-content;position: relative;padding-left: 1.5rem;padding-right: 1.5rem;padding-top: 2rem;padding-bottom: 2rem;background: rgb(248,250,252);background: linear-gradient(135deg, rgba(248,250,252,1) 0%, rgba(241,245,249,1) 100%);border-radius: 0.5rem;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+      <div style="display: flex;position: relative;padding-left: 1rem;padding-right: 1rem;padding-top: 2rem;padding-bottom: 2rem;color: #000000;border-radius: 0.5rem;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);background: rgb(248,250,252);background: linear-gradient(135deg, rgba(248,250,252,1) 0%, rgba(241,245,249,1) 100%);width:fit-content;">
         ${formatted
           .map(({ label, id }) => {
-            return `<div style="padding-left: 0.75rem;padding-right: 0.75rem;${
+            return `<div style="padding-left: 0.5rem;padding-right: 0.5rem;${
               id === "MakeAndModel" ? "font-weight:700;" : ""
             }">${label}</div>`;
           })
-          .join("\n")}
-      </div>
+          .join("\n")}</div>
     `;
   };
 
   return (
-    <div className="container mx-auto max-w-2xl sm:px-6 lg:px-8">
+    <div className="container mx-auto mb-16 max-w-2xl text-slate-900 dark:text-slate-100 sm:px-6 lg:px-8">
       <div className="my-4 text-xl font-bold">Step 1: Upload an Image</div>
       <div className="w-full grow" {...getRootProps()}>
         <div>
           <div
             className={clsx(
-              "mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 hover:bg-gray-50",
+              "mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 hover:bg-gray-50 dark:hover:bg-slate-800",
               isDragActive && "bg-indigo-50"
             )}
           >
             <div className="space-y-1 text-center">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-12 w-12 text-slate-400"
                 stroke="currentColor"
                 fill="none"
                 viewBox="0 0 48 48"
@@ -204,7 +202,7 @@ function Exif() {
                   strokeLinejoin="round"
                 />
               </svg>
-              <div className="flex text-sm text-gray-600">
+              <div className="flex text-sm text-slate-600 dark:text-slate-50">
                 <label
                   htmlFor="file-upload"
                   className="relative cursor-pointer rounded-md font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
@@ -225,17 +223,17 @@ function Exif() {
         </div>
         <p className="text-xs text-gray-500">PNG, JPG, GIF, HEIF</p>
       </div>
-      <div className="my-4 text-xl font-bold">
+      <div className="mb-4 mt-8 text-xl font-bold">
         Step 2: Choose Data to Include
       </div>
       <fieldset>
-        <div className="divide-y divide-gray-200 border-t border-b border-gray-200">
+        <div className="border-skate-200 divide-y divide-slate-200 border-t border-b">
           {exifItems.map((item, itemIdx) => (
             <div key={itemIdx} className="relative flex items-start py-4">
               <div className="min-w-0 flex-1 text-sm">
                 <label
                   htmlFor={`person-${item.id}`}
-                  className="select-none font-medium text-gray-700"
+                  className="select-none font-medium text-slate-700 dark:text-slate-100"
                 >
                   {item.name}
                 </label>
@@ -254,17 +252,17 @@ function Exif() {
           ))}
         </div>
       </fieldset>
-      <div className="my-4 text-xl font-bold">Step 3: Copy HTML</div>
+      <div className="mb-4 mt-8 text-xl font-bold">Step 3: Copy HTML</div>
       {!!exifData && (
         <>
-          <div className="my-4 text-lg">Preview</div>
+          <div className="my-4 text-lg font-bold">Preview</div>
           <div className="mb-16">
-            <div className="relative flex w-fit rounded-lg bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-6 font-atkinson shadow-md">
+            <div className="relative flex w-fit rounded-lg bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 font-atkinson text-black shadow-md">
               {prettyExif(exifData).map(({ label, id }) => {
                 return (
                   <div
                     className={clsx(
-                      "px-3",
+                      "px-2",
                       id === "MakeAndModel" && "font-bold"
                     )}
                     key={id}
@@ -275,8 +273,10 @@ function Exif() {
               })}
             </div>
           </div>
-          <div className="my-4 text-lg">Code</div>
-          <code>{transformHtml(prettyExif(exifData))}</code>
+          <div className="my-4 text-lg font-bold">Code</div>
+          <div className="rounded-lg border border-slate-100 bg-white p-4 shadow dark:border-slate-700 dark:bg-slate-800">
+            <code>{transformHtml(prettyExif(exifData))}</code>
+          </div>
         </>
       )}
     </div>
