@@ -1,7 +1,9 @@
-import EXIF from "exif-js";
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import clsx from "clsx";
+import EXIF from "exif-js";
+import { ReactElement, useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import FormatterLayout from "../components/FormatterLayout";
+import type { NextPageWithLayout } from "./_app";
 
 type ExifData = {
   Make?: string;
@@ -107,7 +109,7 @@ const formatValue = <T extends ExifItemIds>(
   }
 };
 
-function Exif() {
+const Exif: NextPageWithLayout = () => {
   const [checkedItems, setCheckedItems] = useState([
     true,
     true,
@@ -181,7 +183,8 @@ function Exif() {
   };
 
   return (
-    <div className="container mx-auto mb-16 max-w-2xl text-slate-700 dark:text-slate-100 sm:px-6 lg:px-8">
+    <>
+      <h1 className="my-4 text-2xl font-bold">EXIF Data Formatter</h1>
       <h2 className="my-4 text-xl font-bold">Step 1: Upload an Image</h2>
       <div className="w-full grow" {...getRootProps()}>
         <div>
@@ -281,10 +284,10 @@ function Exif() {
           </div>
         </>
       )}
-      <div className="mt-8 flex w-72 flex-col gap-3">
+      <div className="mt-8 flex max-w-xs flex-col gap-3">
         <div>
           <label
-            className="block flex items-center justify-between text-sm font-medium text-slate-700"
+            className="block flex items-center justify-between rounded-lg p-2 text-sm font-medium text-slate-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
             htmlFor="left-color"
           >
             Left Color
@@ -292,21 +295,21 @@ function Exif() {
               style={{ backgroundColor: leftColor }}
               className="ml-2 h-12 w-12 rounded-full border border-slate-100 shadow dark:border-slate-500"
             ></div>
+            <input
+              id="left-color"
+              className="sr-only"
+              type="color"
+              value={leftColor}
+              onChange={(e) => {
+                setLeftColor(e.target.value);
+              }}
+            />
           </label>
-          <input
-            id="left-color"
-            className="sr-only"
-            type="color"
-            value={leftColor}
-            onChange={(e) => {
-              setLeftColor(e.target.value);
-            }}
-          />
         </div>
 
         <div>
           <label
-            className="block flex items-center justify-between text-sm font-medium text-slate-700"
+            className="block flex items-center justify-between rounded-lg p-2 text-sm font-medium text-slate-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
             htmlFor="right-color"
           >
             Right Color
@@ -314,21 +317,21 @@ function Exif() {
               style={{ backgroundColor: rightColor }}
               className="ml-2 h-12 w-12 rounded-full border border-slate-200 shadow dark:border-slate-500"
             ></div>
+            <input
+              id="right-color"
+              className="sr-only"
+              type="color"
+              value={rightColor}
+              onChange={(e) => {
+                setRightColor(e.target.value);
+              }}
+            />
           </label>
-          <input
-            id="right-color"
-            className="sr-only"
-            type="color"
-            value={rightColor}
-            onChange={(e) => {
-              setRightColor(e.target.value);
-            }}
-          />
         </div>
 
         <div>
           <label
-            className="block flex items-center justify-between text-sm font-medium text-slate-700"
+            className="block flex items-center justify-between rounded-lg p-2 text-sm font-medium text-slate-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
             htmlFor="text-color"
           >
             Text Color
@@ -336,16 +339,16 @@ function Exif() {
               style={{ backgroundColor: textColor }}
               className="ml-2 h-12 w-12 rounded-full border border-slate-100 shadow dark:border-slate-500"
             ></div>
+            <input
+              id="text-color"
+              className="sr-only"
+              type="color"
+              value={textColor}
+              onChange={(e) => {
+                setTextColor(e.target.value);
+              }}
+            />
           </label>
-          <input
-            id="text-color"
-            className="sr-only"
-            type="color"
-            value={textColor}
-            onChange={(e) => {
-              setTextColor(e.target.value);
-            }}
-          />
         </div>
       </div>
 
@@ -357,8 +360,12 @@ function Exif() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
-}
+};
+
+Exif.getLayout = (page: ReactElement) => {
+  return <FormatterLayout>{page}</FormatterLayout>;
+};
 
 export default Exif;
