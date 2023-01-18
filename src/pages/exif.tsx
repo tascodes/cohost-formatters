@@ -171,7 +171,7 @@ const Exif: NextPageWithLayout = () => {
 
   const transformHtml = (formatted: ReturnType<typeof prettyExif>) => {
     return `
-      <div style="display: flex;position: relative;padding-left: 1rem;padding-right: 1rem;padding-top: 2rem;padding-bottom: 2rem;border-radius: 0.5rem;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);width: fit-content;background:linear-gradient(135deg, ${leftColor}, ${rightColor});color: ${textColor}">
+      <div style="display: flex;position: relative;padding-left: 1rem;padding-right: 1rem;padding-top: 2rem;padding-bottom: 2rem;border-radius: 0.5rem;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);width: fit-content;background:linear-gradient(135deg, ${leftColor}, ${rightColor});color: ${textColor};">
         ${formatted
           .map(({ label, id }) => {
             return `<div style="padding-left: 0.5rem;padding-right: 0.5rem;${
